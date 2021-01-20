@@ -36,4 +36,36 @@ Output: [[1,1]]
 """
 
 def combinationSum(candidates: List[int], target: int) -> List[List[int]]:
-    return [[]]
+    result = []
+
+    def search(candidate: List[int], index: int):
+        total = sum(candidate)
+        if total > target:
+            return
+        if total == target:
+            result.append(candidate)
+        else:
+            for j in range(index, len(candidates)):
+                search(candidate + [candidates[j]], j)
+
+    for i in range(len(candidates)):
+        search([candidates[i]], i)
+
+    return result
+
+def combinationSumRefactor(candidates: List[int], target: int) -> List[List[int]]:
+    result = []
+    dfs(result, 0, [], candidates, target)
+    return result  
+
+def dfs(result: List[List[int]], current_sum: int, candidate: List[int], candidates: List[int], target: int):
+    if current_sum == target:
+        result.append(candidate)
+    else:
+        for i, n in enumerate(candidates):
+            if current_sum + n > target:
+                return
+            dfs(result, current_sum + n, candidate + [n], candidates[i:], target)
+
+if __name__ == '__main__':
+    print(combinationSum([2,3,6,7], 7))
